@@ -14,7 +14,7 @@ resource "google_cloud_run_service" "myprofile" {
   template {
     spec {
       containers {
-        image = "docker.io/logeshk98/myprofile:lateset"  
+        image = "docker.io/logeshk98/myprofile:latest"  
          ports {
         container_port = 80  # Explicitly use port 80
         }
