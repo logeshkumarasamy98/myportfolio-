@@ -1,19 +1,19 @@
 # Terraform Provider Configuration for Google Cloud
 provider "google" {
   
-  project     = var.GCP_PROJECT_ID
-  region      = var.GCP_REGION
+  project     = logesh-all-test
+  region      = us-central1
 }
 
 # Google Cloud Run Service
 resource "google_cloud_run_service" "myprofile" {
   name     = "myprofile-service"
-  location = var.GCP_REGION
+  location = us-central1
 
   template {
     spec {
       containers {
-        image = "docker.io/${var.IMAGE_NAME}"  # Docker Hub image name
+        image = "docker.io/logeshk98/myprofile:lateset"  # Docker Hub image name
       }
     }
   }
@@ -26,13 +26,13 @@ resource "google_cloud_run_service" "myprofile" {
 
 # Enable Cloud Run API
 resource "google_project_service" "run" {
-  project = var.GCP_PROJECT_ID
+  project = logesh-all-test
   service = "run.googleapis.com"
 }
 
 # Enable Container Registry API
 resource "google_project_service" "container_registry" {
-  project = var.GCP_PROJECT_ID
+  project = logesh-all-test
   service = "containerregistry.googleapis.com"
 }
 
@@ -41,23 +41,5 @@ output "cloud_run_url" {
   value = google_cloud_run_service.myprofile.status[0].url
 }
 
-# Variable Declarations
-variable "GOOGLE_APPLICATION_CREDENTIALS" {
-  description = "Path to the Google Cloud service account JSON key"
-  type        = string
-}
 
-variable "GCP_PROJECT_ID" {
-  description = "Google Cloud project ID"
-  type        = string
-}
 
-variable "GCP_REGION" {
-  description = "Region for deploying resources"
-  type        = string
-}
-
-variable "IMAGE_NAME" {
-  description = "Name of the Docker image to deploy"
-  type        = string
-}
