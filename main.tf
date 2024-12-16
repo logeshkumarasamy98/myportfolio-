@@ -1,14 +1,14 @@
 # Terraform Provider Configuration for Google Cloud
 provider "google" {
   
-  project     = logesh-all-test
-  region      = us-central1
+  project     = "logesh-all-test"
+  region      = "us-central1"
 }
 
 # Google Cloud Run Service
 resource "google_cloud_run_service" "myprofile" {
   name     = "myprofile-service"
-  location = us-central1
+  location = "us-central1"
 
   template {
     spec {
@@ -26,13 +26,13 @@ resource "google_cloud_run_service" "myprofile" {
 
 # Enable Cloud Run API
 resource "google_project_service" "run" {
-  project = logesh-all-test
+  project = "logesh-all-test"
   service = "run.googleapis.com"
 }
 
 # Enable Container Registry API
 resource "google_project_service" "container_registry" {
-  project = logesh-all-test
+  project = "logesh-all-test"
   service = "containerregistry.googleapis.com"
 }
 
