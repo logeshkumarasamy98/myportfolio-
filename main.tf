@@ -15,7 +15,10 @@ resource "google_cloud_run_service" "myprofile" {
   template {
     spec {
       containers {
-        image = "docker.io/logeshk98/myprofile:lateset"  # Docker Hub image name
+        image = "docker.io/logeshk98/myprofile:lateset"  
+         ports {
+        container_port = 80  # Explicitly use port 80
+        }
       }
     }
   }
