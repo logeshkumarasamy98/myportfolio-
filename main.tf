@@ -1,6 +1,6 @@
 # Terraform Provider Configuration for Google Cloud
 provider "google" {
-  credentials = file(var.GOOGLE_APPLICATION_CREDENTIALS)  # Path to your service account JSON key
+  
   project     = var.GCP_PROJECT_ID
   region      = var.GCP_REGION
 }
