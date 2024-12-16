@@ -9,6 +9,8 @@ provider "google" {
 resource "google_cloud_run_service" "myprofile" {
   name     = "myprofile-service"
   location = "us-central1"
+    role     = "roles/run.invoker"
+    member   = "allUsers"
 
   template {
     spec {
