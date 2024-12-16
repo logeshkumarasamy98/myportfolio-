@@ -9,8 +9,7 @@ provider "google" {
 resource "google_cloud_run_service" "myprofile" {
   name     = "myprofile-service"
   location = "us-central1"
-    role     = "roles/run.invoker"
-    member   = "allUsers"
+
 
   template {
     spec {
@@ -29,6 +28,12 @@ resource "google_cloud_run_service" "myprofile" {
   }
 }
 
+resource "google_cloud_run_service_iam_member" "unauthenticated_access" {
+  service  = google_cloud_run_service.myprofile.name
+  location = google_cloud_run_service.myprofile.location
+  role     = "roles/run.invoker"
+  member   = "allUsers"
+}
 # Enable Cloud Run API
 resource "google_project_service" "run" {
   project = "logesh-all-test"
