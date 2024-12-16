@@ -13,7 +13,7 @@ resource "google_cloud_run_service" "myprofile" {
   template {
     spec {
       containers {
-        image = "docker.io/${var.docker_image_name}"  # Docker Hub image name
+        image = "docker.io/${var.IMAGE_NAME}"  # Docker Hub image name
       }
     }
   }
@@ -57,7 +57,7 @@ variable "GCP_REGION" {
   type        = string
 }
 
-variable "docker_image_name" {
+variable "IMAGE_NAME" {
   description = "Name of the Docker image to deploy"
   type        = string
 }
