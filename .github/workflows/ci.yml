@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    # runs-on: ubuntu-latest # This will be replaced by the on-premise runner label if available
+    # runs-on: ubuntu-latest # This will be replaced by the on-premise runner label if available1
     runs-on: self-hosted
     steps:
     - name: Checkout code
