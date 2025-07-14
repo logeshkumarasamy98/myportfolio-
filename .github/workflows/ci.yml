@@ -30,7 +30,7 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: http://localhost:9000
       with:
-        projectBaseDir: . # Adjust if your project is in a subdirectory
+        projectBaseDir: . # Adjust if your project is in a subdirectoryyyy
         args: >
           -Dsonar.projectKey=myportfolio
 
