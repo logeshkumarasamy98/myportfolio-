@@ -35,6 +35,7 @@ jobs:
         projectBaseDir: . # Adjust if your project is in a subdirectoryyyy
         args: >
           -Dsonar.projectKey=myportfolio
+          -Dsonar.sources=.
 
     - name: Run in development environment
       run: npm run dev
