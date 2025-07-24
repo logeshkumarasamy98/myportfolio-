@@ -36,6 +36,3 @@ jobs:
         args: >
           -Dsonar.projectKey=myportfolio
           -Dsonar.sources=.
-
-    - name: Run in development environment
-      run: npm run dev
