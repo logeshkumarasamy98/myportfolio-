@@ -5,6 +5,7 @@ import Hero from './components/Hero';
 import Skills from './components/Skills';
 
 function App() {
+  const unusedVariable = "This variable is intentionally unused to trigger a SonarQube warning.";
   return (
     <AnimatePresence>
       <div className="bg-slate-900 min-h-screen">
