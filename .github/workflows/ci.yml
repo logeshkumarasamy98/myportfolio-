@@ -36,22 +36,23 @@
 #         args: >
 #           -Dsonar.projectKey=myportfolio
 #           -Dsonar.sources=.
-name: CI/CD Pipeline
+
+
+
+name: CI/CD Pipeline with SonarQube + OWASP Dependency-Check
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build:
     runs-on: self-hosted
 
     steps:
-    - name: Checkout code
+    - name: Checkout Code
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
@@ -61,26 +62,31 @@ jobs:
       with:
         node-version: '20.x'
 
-    - name: Install dependencies
+    - name: Install Dependencies
       run: npm install
 
-    # ✅ STEP 1: Install OWASP Dependency-Check CLI
-    - name: Install OWASP Dependency-Check
-      run: |
-        wget https://github.com/jeremylong/DependencyCheck/releases/latest/download/dependency-check.zip
-        unzip -q dependency-check.zip -d dependency-check
-        chmod +x dependency-check/bin/dependency-check.sh
+    # ✅ Dependency-Check Action (uses Docker, updates DB automatically)
+    - name: OWASP Dependency-Check
+      uses: dependency-check/Dependency-Check_Action@main
+      id: Depcheck
+      env:
+        JAVA_HOME: /opt/jdk  # fix for JAVA_HOME error with self-hosted runners
+      with:
+        project: 'myportfolio'
+        path: '.'  # directory to scan
+        format: 'HTML,JSON'
+        out: 'odc-reports'  # default is 'reports', override to keep clean
+        args: >
+          --failOnCVSS 0
 
-    # ✅ STEP 2: Run Dependency-Check and generate reports
-    - name: Run OWASP Dependency-Check
-      run: |
-        ./dependency-check/bin/dependency-check.sh \
-          --project "My Portfolio" \
-          --scan . \
-          --format JSON,HTML \
-          --out odc-reports
+    # Optional: Upload reports to GitHub artifacts
+    - name: Upload Dependency-Check Reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: depcheck-report
+        path: odc-reports/
 
-    # ✅ STEP 3: Run SonarQube Scan with Dependency-Check report paths
+    # ✅ SonarQube Scan with Dependency-Check Report Paths
     - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v5.0.0
       env:
@@ -93,5 +99,3 @@ jobs:
           -Dsonar.sources=.
           -Dsonar.dependencyCheck.jsonReportPath=odc-reports/dependency-check-report.json
           -Dsonar.dependencyCheck.htmlReportPath=odc-reports/dependency-check-report.html
-
-          
