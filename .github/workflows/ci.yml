@@ -77,8 +77,11 @@ jobs:
         out: odc-reports
         args: --failOnCVSS 0
 
-    - name: Fix permissions for odc-reports
-      run: chmod -R u+rwX odc-reports
+    - name: Fix permission of odc-reports directory
+      run: |
+        sudo chown -R $(whoami):$(whoami) odc-reports
+        chmod -R u+rwX odc-reports
+
 
     - name: Upload Dependency-Check Reports
       uses: actions/upload-artifact@v4
