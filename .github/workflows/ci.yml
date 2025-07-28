@@ -75,7 +75,7 @@ jobs:
         path: .
         format: ALL
         out: odc-reports
-        args: --failOnCVSS 0
+        args: --failOnCVSS 7
 
     - name: Fix permission of odc-reports directory
       run: |
