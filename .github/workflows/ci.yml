@@ -36,7 +36,7 @@
 #         args: >
 #           -Dsonar.projectKey=myportfolio
 #           -Dsonar.sources=.
-
+# abc
 
 
 name: CI/CD Pipeline with SonarQube + OWASP Dependency-Check
@@ -72,12 +72,12 @@ jobs:
       env:
         JAVA_HOME: /opt/jdk  # fix for JAVA_HOME error with self-hosted runners
       with:
-        project: 'myportfolio'
-        path: '.'  # directory to scan
-        format: 'HTML,JSON'
-        out: 'odc-reports'  # default is 'reports', override to keep clean
-        args: >
-          --failOnCVSS 0
+        project: myportfolio
+        path: .
+        format: ALL
+        out: odc-reports
+        args: --failOnCVSS 0
+
 
     # Optional: Upload reports to GitHub artifacts
     - name: Upload Dependency-Check Reports
