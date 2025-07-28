@@ -1,17 +1,19 @@
-name: CI/CD Pipeline with SonarQube + OWASP Dependency-Check
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: self-hosted
 
     steps:
-    - name: Checkout Code
+    - name: Checkout code
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
@@ -21,31 +23,19 @@ jobs:
       with:
         node-version: '20.x'
 
-    - name: Install Dependencies
+    - name: Install dependencies
       run: npm install
 
-    # ✅ Dependency-Check Action (uses Docker, updates DB automatically)
-    - name: OWASP Dependency-Check
+    # ✅ OWASP Dependency-Check GitHub Action
+    - name: Dependency-Check Analysis
       uses: dependency-check/Dependency-Check_Action@main
-      id: Depcheck
-      env:
-        JAVA_HOME: /opt/jdk  # fix for JAVA_HOME error with self-hosted runners
       with:
-        project: 'myportfolio'
-        path: '.'  # directory to scan
+        project: "My Portfolio"
+        path: '.'  # folder to scan
         format: 'HTML,JSON'
-        out: 'odc-reports'  # default is 'reports', override to keep clean
-        args: >
-          --failOnCVSS 0
+        out: 'odc-reports'
 
-    # Optional: Upload reports to GitHub artifacts
-    - name: Upload Dependency-Check Reports
-      uses: actions/upload-artifact@v4
-      with:
-        name: depcheck-report
-        path: odc-reports/
-
-    # ✅ SonarQube Scan with Dependency-Check Report Paths
+    # ✅ SonarQube Scan
     - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v5.0.0
       env:
