@@ -69,7 +69,7 @@ jobs:
       uses: SonarSource/sonarqube-scan-action@v5.0.0
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: http://localhost:9000
+        SONAR_HOST_URL: https://studioai.logesh.store/
       with:
         projectBaseDir: .
         args: >
