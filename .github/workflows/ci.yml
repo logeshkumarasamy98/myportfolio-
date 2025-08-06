@@ -101,3 +101,6 @@ jobs:
           -Dsonar.sources=.
           -Dsonar.dependencyCheck.jsonReportPath=odc-reports/dependency-check-report.json
           -Dsonar.dependencyCheck.htmlReportPath=odc-reports/dependency-check-report.html
+          -Dsonar.pullrequest.key=${{ github.event.number }} 
+          -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }} 
+          -Dsonar.pullrequest.branch=${{ github.event.pull_request.head.ref }}
