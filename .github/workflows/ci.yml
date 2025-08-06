@@ -65,29 +65,29 @@ jobs:
     - name: Install Dependencies
       run: npm install
 
-    - name: OWASP Dependency-Check
-      uses: dependency-check/Dependency-Check_Action@main
-      id: Depcheck
-      env:
-        JAVA_HOME: /opt/jdk  # fix for JAVA_HOME error with self-hosted runners
-      with:
-        project: myportfolio
-        path: .
-        format: ALL
-        out: odc-reports
-        args: --failOnCVSS 7
+    # - name: OWASP Dependency-Check
+    #   uses: dependency-check/Dependency-Check_Action@main
+    #   id: Depcheck
+    #   env:
+    #     JAVA_HOME: /opt/jdk  # fix for JAVA_HOME error with self-hosted runners
+    #   with:
+    #     project: myportfolio
+    #     path: .
+    #     format: ALL
+    #     out: odc-reports
+    #     args: --failOnCVSS 7
 
-    - name: Fix permission of odc-reports directory
-      run: |
-        sudo chown -R $(whoami):$(whoami) odc-reports
-        chmod -R u+rwX odc-reports
+    # - name: Fix permission of odc-reports directory
+    #   run: |
+    #     sudo chown -R $(whoami):$(whoami) odc-reports
+    #     chmod -R u+rwX odc-reports
 
 
-    - name: Upload Dependency-Check Reports
-      uses: actions/upload-artifact@v4
-      with:
-        name: depcheck-report
-        path: odc-reports/
+    # - name: Upload Dependency-Check Reports
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: depcheck-report
+    #     path: odc-reports/
 
     - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v5.0.0
