@@ -40,10 +40,10 @@
 name: CI/CD Pipeline with SonarQube + OWASP Dependency-Check
 
 on:
-  # push:
-  #   branches: [main]
-  pull_request:
+  push:
     branches: [main]
+  # pull_request:
+  #   branches: [main]
 
 jobs:
   build:
@@ -95,8 +95,6 @@ jobs:
       with:
         projectBaseDir: .
         args: >
-          -Dsonar.scanner.ci.detector=false
-          -Dsonar.branch.automaticDetection=false
           -Dsonar.projectKey=myportfolio
           -Dsonar.sources=.
           -Dsonar.dependencyCheck.jsonReportPath=odc-reports/dependency-check-report.json
