@@ -95,10 +95,12 @@ jobs:
       with:
         projectBaseDir: .
         args: >
+          -Dsonar.scanner.ci.detector=false
           -Dsonar.projectKey=myportfolio
           -Dsonar.sources=.
           -Dsonar.dependencyCheck.jsonReportPath=odc-reports/dependency-check-report.json
           -Dsonar.dependencyCheck.htmlReportPath=odc-reports/dependency-check-report.html
+  
 
     # ✅ Optional: Cleanup reports at the end
     - name: Cleanup reports
