@@ -79,6 +79,9 @@ jobs:
         path: "." # change if your code is inside a subfolder
         format: "ALL" # generates JSON, HTML, XML
         out: "odc-reports" # reports directory
+          # ✅ Ensure correct permissions (so runner can clean up next time)
+    - name: Fix report directory permissions
+      run: sudo chown -R $USER:$USER odc-reports || true
 
     # ✅ Run SonarQube Analysis
     - name: SonarQube Scan
