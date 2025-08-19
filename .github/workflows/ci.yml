@@ -37,7 +37,6 @@
 #           -Dsonar.projectKey=myportfolio
 #           -Dsonar.sources=.
 # abc
-
 name: CI/CD Pipeline with SonarQube + OWASP Dependency-Check
 
 on:
@@ -63,27 +62,31 @@ jobs:
 
     - name: Install Dependencies
       run: npm install
-
-    # ✅ Cache Dependency-Check DB to speed up builds
-    - name: Cache Dependency-Check DB
-      uses: actions/cache@v3
-      with:
-        path: ~/.dependency-check
-        key: ${{ runner.os }}-dependency-check
+        # ✅ Ensure runner owns the reports (prevents EACCES cleanup errors)
+    - name: Fix report directory permissions
+      run: sudo chown -R $USER:$USER odc-reports || true
 
     # ✅ Run OWASP Dependency-Check
     - name: Run OWASP Dependency-Check
       uses: dependency-check/Dependency-Check_Action@main
       with:
         project: "myportfolio"
-        path: "." # change if your code is inside a subfolder
-        format: "ALL" # generates JSON, HTML, XML
-        out: "odc-reports" # reports directory
-          # ✅ Ensure correct permissions (so runner can clean up next time)
+        path: "."
+        format: "ALL"
+        out: "odc-reports"
+
+    # ✅ Upload reports as artifacts (downloadable from Actions UI)
+    - name: Upload Dependency-Check Reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: dependency-check-reports
+        path: odc-reports/
+
+    # ✅ Ensure runner owns the reports (prevents EACCES cleanup errors)
     - name: Fix report directory permissions
       run: sudo chown -R $USER:$USER odc-reports || true
 
-    # ✅ Run SonarQube Analysis
+    # ✅ SonarQube Scan with Dependency-Check integration
     - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v5.0.0
       env:
@@ -96,6 +99,12 @@ jobs:
           -Dsonar.sources=.
           -Dsonar.dependencyCheck.jsonReportPath=odc-reports/dependency-check-report.json
           -Dsonar.dependencyCheck.htmlReportPath=odc-reports/dependency-check-report.html
-          -Dsonar.pullrequest.key=${{ github.event.number }}
-          -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }}
+          -Dsonar.pullrequest.key=${{ github.event.number }} 
+          -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }} 
           -Dsonar.pullrequest.branch=${{ github.event.pull_request.head.ref }}
+
+    # ✅ Optional: Cleanup reports at the end
+    - name: Cleanup reports
+      if: always()
+      run: sudo rm -rf odc-reports || true
+
