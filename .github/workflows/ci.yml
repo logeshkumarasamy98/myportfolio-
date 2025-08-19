@@ -86,20 +86,19 @@ jobs:
     - name: Fix report directory permissions
       run: sudo chown -R $USER:$USER odc-reports || true
 
-    # ✅ SonarQube Scan with Dependency-Check integration
+        # ✅ SonarQube Scan with Dependency-Check integration
     - name: SonarQube Scan
-      uses: SonarSource/sonarqube-scan-action@v5.0.0
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: https://studioai.logesh.store/
+      uses: sonarsource/sonarqube-scan-action@v2
       with:
-        projectBaseDir: .
         args: >
           -Dsonar.projectKey=myportfolio
           -Dsonar.sources=.
+          -Dsonar.host.url=https://studioai.logesh.store
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
           -Dsonar.dependencyCheck.jsonReportPath=odc-reports/dependency-check-report.json
           -Dsonar.dependencyCheck.htmlReportPath=odc-reports/dependency-check-report.html
-  
+
+      
 
     # ✅ Optional: Cleanup reports at the end
     - name: Cleanup reports
