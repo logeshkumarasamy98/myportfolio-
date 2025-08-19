@@ -65,6 +65,14 @@ jobs:
     - name: Install Dependencies
       run: npm install
 
+    - name: Run OWASP Dependency-Check
+      uses: dependency-check/Dependency-Check_Action@main
+      with:
+        project: 'myportfolio'
+        path: '.'
+        format: 'ALL'
+        out: 'odc-reports'
+
     - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v5.0.0
       env:
@@ -77,6 +85,6 @@ jobs:
           -Dsonar.sources=.
           -Dsonar.dependencyCheck.jsonReportPath=odc-reports/dependency-check-report.json
           -Dsonar.dependencyCheck.htmlReportPath=odc-reports/dependency-check-report.html
-          -Dsonar.pullrequest.key=${{ github.event.number }} 
-          -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }} 
+          -Dsonar.pullrequest.key=${{ github.event.number }}
+          -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }}
           -Dsonar.pullrequest.branch=${{ github.event.pull_request.head.ref }}
