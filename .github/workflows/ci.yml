@@ -38,7 +38,6 @@
 #           -Dsonar.sources=.
 # abc
 
-
 name: CI/CD Pipeline with SonarQube + OWASP Dependency-Check
 
 on:
@@ -65,14 +64,23 @@ jobs:
     - name: Install Dependencies
       run: npm install
 
+    # ✅ Cache Dependency-Check DB to speed up builds
+    - name: Cache Dependency-Check DB
+      uses: actions/cache@v3
+      with:
+        path: ~/.dependency-check
+        key: ${{ runner.os }}-dependency-check
+
+    # ✅ Run OWASP Dependency-Check
     - name: Run OWASP Dependency-Check
       uses: dependency-check/Dependency-Check_Action@main
       with:
-        project: 'myportfolio'
-        path: '.'
-        format: 'ALL'
-        out: 'odc-reports'
+        project: "myportfolio"
+        path: "." # change if your code is inside a subfolder
+        format: "ALL" # generates JSON, HTML, XML
+        out: "odc-reports" # reports directory
 
+    # ✅ Run SonarQube Analysis
     - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v5.0.0
       env:
