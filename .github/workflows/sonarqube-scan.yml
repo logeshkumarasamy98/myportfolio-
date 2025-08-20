@@ -32,5 +32,4 @@ jobs:
             -Dsonar.sources=src \
             -Dsonar.host.url=http://localhost:9000 \
             -Dsonar.login=$SONAR_TOKEN \
-            -Dsonar.branch.name=
-            
+            -Dsonar.branch.name=${{ github.ref }}
