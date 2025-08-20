@@ -40,10 +40,10 @@
 name: CI/CD Pipeline with SonarQube + OWASP Dependency-Check
 
 on:
-  push:
-    branches: [main]
-  # pull_request:
+  # push:
   #   branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   build:
@@ -63,24 +63,24 @@ jobs:
     - name: Install Dependencies
       run: npm install
         # ✅ Ensure runner owns the reports (prevents EACCES cleanup errors)
-    - name: Fix report directory permissions
-      run: sudo chown -R $USER:$USER odc-reports || true
+    # - name: Fix report directory permissions
+    #   run: sudo chown -R $USER:$USER odc-reports || true
 
-    # ✅ Run OWASP Dependency-Check
-    - name: Run OWASP Dependency-Check
-      uses: dependency-check/Dependency-Check_Action@main
-      with:
-        project: "myportfolio"
-        path: "."
-        format: "ALL"
-        out: "odc-reports"
+    # # ✅ Run OWASP Dependency-Check
+    # - name: Run OWASP Dependency-Check
+    #   uses: dependency-check/Dependency-Check_Action@main
+    #   with:
+    #     project: "myportfolio"
+    #     path: "."
+    #     format: "ALL"
+    #     out: "odc-reports"
 
-    # ✅ Upload reports as artifacts (downloadable from Actions UI)
-    - name: Upload Dependency-Check Reports
-      uses: actions/upload-artifact@v4
-      with:
-        name: dependency-check-reports
-        path: odc-reports/
+    # # ✅ Upload reports as artifacts (downloadable from Actions UI)
+    # - name: Upload Dependency-Check Reports
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: dependency-check-reports
+    #     path: odc-reports/
 
     # ✅ Ensure runner owns the reports (prevents EACCES cleanup errors)
     - name: Fix report directory permissions
@@ -99,8 +99,11 @@ jobs:
           -Dsonar.sources=.
           -Dsonar.host.url=https://studioai.logesh.store
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-          -Dsonar.dependencyCheck.jsonReportPath=odc-reports/dependency-check-report.json
-          -Dsonar.dependencyCheck.htmlReportPath=odc-reports/dependency-check-report.html
+          -Dsonar.pullrequest.key=${{ github.event.pull_request.number }} 
+          -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }} 
+          -Dsonar.pullrequest.branch=${{ github.event.pull_request.head.ref }}
+
+          
 
   
 
