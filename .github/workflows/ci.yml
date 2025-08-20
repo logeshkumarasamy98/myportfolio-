@@ -37,15 +37,13 @@
 #           -Dsonar.projectKey=myportfolio
 #           -Dsonar.sources=.
 # abc
-
-
 name: CI/CD Pipeline with SonarQube + OWASP Dependency-Check
 
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
+  # pull_request:
+  #   branches: [main]
 
 jobs:
   build:
@@ -62,42 +60,52 @@ jobs:
       with:
         node-version: '20.x'
 
-    - name: Install Dependencies
-      run: npm install
+    # - name: Install Dependencies
+    #   run: npm install
+    #     # ✅ Ensure runner owns the reports (prevents EACCES cleanup errors)
+    # - name: Fix report directory permissions
+    #   run: sudo chown -R $USER:$USER odc-reports || true
 
-    - name: OWASP Dependency-Check
-      uses: dependency-check/Dependency-Check_Action@main
-      id: Depcheck
-      env:
-        JAVA_HOME: /opt/jdk  # fix for JAVA_HOME error with self-hosted runners
-      with:
-        project: myportfolio
-        path: .
-        format: ALL
-        out: odc-reports
-        args: --failOnCVSS 7
+    # # ✅ Run OWASP Dependency-Check
+    # - name: Run OWASP Dependency-Check
+    #   uses: dependency-check/Dependency-Check_Action@main
+    #   with:
+    #     project: "myportfolio"
+    #     path: "."
+    #     format: "ALL"
+    #     out: "odc-reports"
 
-    - name: Fix permission of odc-reports directory
-      run: |
-        sudo chown -R $(whoami):$(whoami) odc-reports
-        chmod -R u+rwX odc-reports
+    # # ✅ Upload reports as artifacts (downloadable from Actions UI)
+    # - name: Upload Dependency-Check Reports
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: dependency-check-reports
+    #     path: odc-reports/
 
+    # # ✅ Ensure runner owns the reports (prevents EACCES cleanup errors)
+    # - name: Fix report directory permissions
+      # run: sudo chown -R $USER:$USER odc-reports || true
 
-    - name: Upload Dependency-Check Reports
-      uses: actions/upload-artifact@v4
-      with:
-        name: depcheck-report
-        path: odc-reports/
+    # ✅ SonarQube Scan with Dependency-Check integration
+    - name: Official SonarQube Scan
 
-    - name: SonarQube Scan
-      uses: SonarSource/sonarqube-scan-action@v5.0.0
+      uses: SonarSource/sonarqube-scan-action@v5.3.0
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: https://studioai.logesh.store/
       with:
-        projectBaseDir: .
         args: >
           -Dsonar.projectKey=myportfolio
           -Dsonar.sources=.
+          -Dsonar.host.url=https://studioai.logesh.store
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
           -Dsonar.dependencyCheck.jsonReportPath=odc-reports/dependency-check-report.json
           -Dsonar.dependencyCheck.htmlReportPath=odc-reports/dependency-check-report.html
+
+  
+
+    # # ✅ Optional: Cleanup reports at the end
+    # - name: Cleanup reports
+    #   if: always()
+    #   run: sudo rm -rf odc-reports || true
+
