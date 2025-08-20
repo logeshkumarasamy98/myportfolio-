@@ -1,112 +1,115 @@
-# name: CI/CD Pipeline
-
-# on:
-#   push:
-#     branches:
-#       - main
-#   pull_request:
-#     branches:
-#       - main
-
-# jobs:
-#   build:
-#     # runs-on: ubuntu-latest # This will be replaced by the on-premise runner label if available1
-#     runs-on: self-hosted
-#     steps:
-#     - name: Checkout code
-#       uses: actions/checkout@v4
-#       with:
-#         fetch-depth: 0 # Disable shallow clone for SonarQube analysis
-
-#     - name: Setup Node.js
-#       uses: actions/setup-node@v4
-#       with:
-#         node-version: '20.x' # Use a specific Node.js version
-
-#     - name: Install dependencies
-#       run: npm install
-
-#     - name: SonarQube Scan
-#       uses: SonarSource/sonarqube-scan-action@v5.0.0
-#       env:
-#         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#         SONAR_HOST_URL: http://localhost:9000
-#       with:
-#         projectBaseDir: . # Adjust if your project is in a subdirectoryyyy
-#         args: >
-#           -Dsonar.projectKey=myportfolio
-#           -Dsonar.sources=.
-# abc
-name: CI/CD Pipeline with SonarQube + OWASP Dependency-Check
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main]
-  # pull_request:
-  #   branches: [main]
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
+    # runs-on: ubuntu-latest # This will be replaced by the on-premise runner label if available1
     runs-on: self-hosted
-
     steps:
-    - name: Checkout Code
+    - name: Checkout code
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0
+        fetch-depth: 0 # Disable shallow clone for SonarQube analysis
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20.x'
+        node-version: '20.x' # Use a specific Node.js version
 
- 
+    - name: Install dependencies
+      run: npm install
 
-    # - name: Install Dependencies
-    #   run: npm install
-    #     # ✅ Ensure runner owns the reports (prevents EACCES cleanup errors)
-    # - name: Fix report directory permissions
-    #   run: sudo chown -R $USER:$USER odc-reports || true
-
-    # # ✅ Run OWASP Dependency-Check
-    # - name: Run OWASP Dependency-Check
-    #   uses: dependency-check/Dependency-Check_Action@main
-    #   with:
-    #     project: "myportfolio"
-    #     path: "."
-    #     format: "ALL"
-    #     out: "odc-reports"
-
-    # # ✅ Upload reports as artifacts (downloadable from Actions UI)
-    # - name: Upload Dependency-Check Reports
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: dependency-check-reports
-    #     path: odc-reports/
-
-    # # ✅ Ensure runner owns the reports (prevents EACCES cleanup errors)
-    # - name: Fix report directory permissions
-      # run: sudo chown -R $USER:$USER odc-reports || true
-
-    # ✅ SonarQube Scan with Dependency-Check integration
-    - name: Official SonarQube Scan
-
-      uses: SonarSource/sonarqube-scan-action@v5.3.0
+    - name: SonarQube Scan
+      uses: SonarSource/sonarqube-scan-action@v5.0.0
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: http://localhost:9000
       with:
+        projectBaseDir: . # Adjust if your project is in a subdirectoryyyy
         args: >
           -Dsonar.projectKey=myportfolio
           -Dsonar.sources=.
-          -Dsonar.host.url=http://localhost:9000
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+# abc
+
+
+
+# name: CI/CD Pipeline with SonarQube + OWASP Dependency-Check
+
+# on:
+#   push:
+#     branches: [main]
+#   # pull_request:
+#   #   branches: [main]
+
+# jobs:
+#   build:
+#     runs-on: self-hosted
+
+#     steps:
+#     - name: Checkout Code
+#       uses: actions/checkout@v4
+#       with:
+#         fetch-depth: 0
+
+#     - name: Setup Node.js
+#       uses: actions/setup-node@v4
+#       with:
+#         node-version: '20.x'
+
+ 
+
+#     # - name: Install Dependencies
+#     #   run: npm install
+#     #     # ✅ Ensure runner owns the reports (prevents EACCES cleanup errors)
+#     # - name: Fix report directory permissions
+#     #   run: sudo chown -R $USER:$USER odc-reports || true
+
+#     # # ✅ Run OWASP Dependency-Check
+#     # - name: Run OWASP Dependency-Check
+#     #   uses: dependency-check/Dependency-Check_Action@main
+#     #   with:
+#     #     project: "myportfolio"
+#     #     path: "."
+#     #     format: "ALL"
+#     #     out: "odc-reports"
+
+#     # # ✅ Upload reports as artifacts (downloadable from Actions UI)
+#     # - name: Upload Dependency-Check Reports
+#     #   uses: actions/upload-artifact@v4
+#     #   with:
+#     #     name: dependency-check-reports
+#     #     path: odc-reports/
+
+#     # # ✅ Ensure runner owns the reports (prevents EACCES cleanup errors)
+#     # - name: Fix report directory permissions
+#       # run: sudo chown -R $USER:$USER odc-reports || true
+
+#     # ✅ SonarQube Scan with Dependency-Check integration
+#     - name: Official SonarQube Scan
+
+#       uses: SonarSource/sonarqube-scan-action@v5.3.0
+#       env:
+#         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#         SONAR_HOST_URL: http://localhost:9000
+#       with:
+#         args: >
+#           -Dsonar.projectKey=myportfolio
+#           -Dsonar.sources=.
+#           -Dsonar.host.url=http://localhost:9000
+#           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
 
   
 
-    # # ✅ Optional: Cleanup reports at the end
-    # - name: Cleanup reports
-    #   if: always()
-    #   run: sudo rm -rf odc-reports || true
+#     # # ✅ Optional: Cleanup reports at the end
+#     # - name: Cleanup reports
+#     #   if: always()
+#     #   run: sudo rm -rf odc-reports || true
 
