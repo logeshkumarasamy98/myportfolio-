@@ -27,7 +27,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          sonarqube-scanner \
+          npx sonarqube-scanner \
             -Dsonar.projectKey=myportfolio \
             -Dsonar.sources=src \
             -Dsonar.host.url=https://sonarqube.example.com \
