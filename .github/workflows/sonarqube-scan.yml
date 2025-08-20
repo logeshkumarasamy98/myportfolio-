@@ -1,0 +1,35 @@
+name: SonarQube Scan
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sonarqube:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache SonarQube packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: SonarQube Scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          ./gradlew sonarqube \
+            -Dsonar.projectKey=myportfolio \
+            -Dsonar.host.url=http://localhost:9000 \
+            -Dsonar.login=$SONAR_TOKEN
