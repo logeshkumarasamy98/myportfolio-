@@ -83,8 +83,8 @@ jobs:
     #     path: odc-reports/
 
     # ✅ Ensure runner owns the reports (prevents EACCES cleanup errors)
-    - name: Fix report directory permissions
-      run: sudo chown -R $USER:$USER odc-reports || true
+    # - name: Fix report directory permissions
+    #   run: sudo chown -R $USER:$USER odc-reports || true
 
     # ✅ SonarQube Scan with Dependency-Check integration
     - name: Official SonarQube Scan
