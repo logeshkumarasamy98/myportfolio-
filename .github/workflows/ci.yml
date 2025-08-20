@@ -89,7 +89,7 @@ jobs:
     # ✅ SonarQube Scan with Dependency-Check integration
     - name: Official SonarQube Scan
 
-      uses: SonarSource/sonarqube-scan-action@v5.3.0
+      uses: SonarSource/sonarqube-scan-action@master
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: https://studioai.logesh.store/
