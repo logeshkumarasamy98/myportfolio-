@@ -92,12 +92,12 @@ jobs:
       uses: SonarSource/sonarqube-scan-action@v5.3.0
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: https://studioai.logesh.store/
+        SONAR_HOST_URL: http://localhost:9000
       with:
         args: >
           -Dsonar.projectKey=myportfolio
           -Dsonar.sources=.
-          -Dsonar.host.url=https://studioai.logesh.store
+          -Dsonar.host.url=http://localhost:9000
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
           -Dsonar.dependencyCheck.jsonReportPath=odc-reports/dependency-check-report.json
           -Dsonar.dependencyCheck.htmlReportPath=odc-reports/dependency-check-report.html
