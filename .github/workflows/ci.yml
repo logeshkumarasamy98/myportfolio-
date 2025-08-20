@@ -108,7 +108,4 @@ jobs:
   
 
     # ✅ Optional: Cleanup reports at the end
-    - name: Cleanup reports
-      if: always()
-      run: sudo rm -rf odc-reports || true
 
