@@ -20,16 +20,19 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install SonarScanner
-        run: npm install -g sonarqube-scanner
+      - name: Install SonarScanner CLI
+        run: |
+          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+          unzip sonar-scanner.zip -d $HOME
+          echo "$HOME/sonar-scanner-5.0.1.3006-linux/bin" >> $GITHUB_PATH
 
       - name: Run SonarQube Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-           sonarqube-scanner \
+          sonar-scanner \
             -Dsonar.projectKey=myportfolio \
             -Dsonar.sources=src \
             -Dsonar.host.url=http://localhost:9000 \
             -Dsonar.login=$SONAR_TOKEN \
-            -Dsonar.branch.name=${{ github.ref }}
+            -Dsonar.branch.name=${{ github.ref_name }}
